@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:familyapp}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
+  properties:
+    hibernate:
+    format_sql: true
