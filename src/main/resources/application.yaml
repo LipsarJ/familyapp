@@ -11,3 +11,10 @@ spring:
   properties:
     hibernate:
     format_sql: true
+app:
+  security:
+    refreshTokenDurationMs: 600000000
+    jwtSecret: "======================FamilyApplication==========================="
+    jwtExpirationMs: 1800000
+    jwtCookie: "family-jwt"
+    jwtRefreshCookie: "family-jwt-refresh"
