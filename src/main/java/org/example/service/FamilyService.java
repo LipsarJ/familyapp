@@ -31,7 +31,6 @@ public class FamilyService {
     private final UserContext userContext;
     private final FamilyMapper familyMapper;
     private final FamilyRepo familyRepo;
-    private final UserMapper userMapper;
 
 
     public List<ResponseFamilyDTO> getFamiliesForUser() {
@@ -45,8 +44,8 @@ public class FamilyService {
 
     }
 
-    public ResponseFamilyDTO getFamilyByName(String name) {
-        Family family = familyRepo.findByNameIgnoreCase(name).orElseThrow(() -> new FamilyNotFoundException("Family with name" + name + " isn't found"));
+    public ResponseFamilyDTO getFamilyByID(Long id) {
+        Family family = familyRepo.findById(id).orElseThrow(() -> new FamilyNotFoundException("Family with id" + id + " not found"));
         return familyMapper.toResponseFamilyDTO(family);
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ResponseFamilyDTO {
+    private Long id;
     private String name;
 
     private List<ResponseUserDto> users;

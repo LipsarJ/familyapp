@@ -57,9 +57,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/register").permitAll()
-                                .requestMatchers("/api/auth/refreshtoken").permitAll()
-                                .requestMatchers("/api/auth/signin").permitAll()
+                        auth.requestMatchers("/newAPI/auth/register").permitAll()
+                                .requestMatchers("/newAPI/auth/refreshtoken").permitAll()
+                                .requestMatchers("/newAPI/auth/signin").permitAll()
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                 .requestMatchers("/error").permitAll()
@@ -76,7 +76,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", "https://lips-ar.online")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true)
                 .maxAge(3600);

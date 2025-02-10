@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/family")
+@RequestMapping("newAPI/family")
 @RequiredArgsConstructor
 public class FamilyController {
 
@@ -22,13 +22,13 @@ public class FamilyController {
         return ResponseEntity.ok(familyService.getFamiliesForUser());
     }
 
-    @GetMapping({"name"})
-    public ResponseEntity<ResponseFamilyDTO> getFamilyByName(@RequestParam String name) {
-        return ResponseEntity.ok(familyService.getFamilyByName(name));
+    @GetMapping({"{id}"})
+    public ResponseEntity<ResponseFamilyDTO> getFamilyByName(@PathVariable Long id) {
+        return ResponseEntity.ok(familyService.getFamilyByID(id));
     }
 
     @PostMapping("create")
-    public ResponseEntity<ResponseFamilyDTO> createFamily(@Valid @RequestBody RequestFamilyDTO familyDTO) {
+    public ResponseEntity<ResponseFamilyDTO> createFamily(@RequestBody RequestFamilyDTO familyDTO) {
         return ResponseEntity.ok(familyService.createFamily(familyDTO));
     }
 
