@@ -5,12 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ResponseTaskDTO {
+public class ResponseProductDTO {
     private Long id;
-    private String title;
-    private String description;
+    private String name;
     private String status;
-    private ResponseUserDto creator;
-    private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }

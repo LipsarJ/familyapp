@@ -1,6 +1,7 @@
 package org.example.repo;
 
 import org.example.entity.Family;
+import org.example.entity.Product;
 import org.example.entity.Task;
 import org.example.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query("select t from Task t join t.creator c where c = :user")
     List<Task> findTasksByUser(User user);
+
+    @Query("select p from Product p join p.users u where u = :user")
+    List<Product> findProductsByUser(User user);
 }

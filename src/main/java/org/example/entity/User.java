@@ -57,6 +57,10 @@ public class User {
     @JsonIgnore
     private Set<Family> families = new HashSet<>();
 
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
+
     @PrePersist
     void onCreate() {
         updateDate = LocalDateTime.now(ZoneId.from(UTC));
