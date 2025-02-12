@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,11 +48,8 @@ public class TaskService {
 
     public List<ResponseTaskDTO> getAllTasksForUser() {
         User user = userRepo.findUserByUsername(userContext.getUserDto().getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        List<ResponseTaskDTO> taskDTOList = new ArrayList<>();
-        user.getTasks().forEach(task -> {
-            taskDTOList.add(taskMapper.toResponseTaskDTO(task));
-        });
-        return taskDTOList;
+        List<Task> tasks = userRepo.findTasksByUser(user);
+        return tasks.stream().map(taskMapper::toResponseTaskDTO).collect(Collectors.toList());
     }
 
 
@@ -79,10 +77,6 @@ public class TaskService {
         Task task = createTask(requestTaskDTO);
         Family family = familyRepo.findById(familyID).orElseThrow(() -> new FamilyNotFoundException("Family with id" + familyID + " not found"));
         family.getTasks().add(task);
-        family.getUsers().forEach(user -> {
-            user.getTasks().add(task);
-            userRepo.save(user);
-        });
         familyRepo.save(family);
         return taskMapper.toResponseTaskDTO(task);
     }
