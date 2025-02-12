@@ -29,16 +29,16 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        return generateCookie(jwtCookie, jwt, "/api");
+        return generateCookie(jwtCookie, jwt, "/newAPI");
     }
 
     public ResponseCookie generateJwtCookie(User user) {
         String jwt = generateTokenFromUsername(user.getUsername());
-        return generateCookie(jwtCookie, jwt, "/api");
+        return generateCookie(jwtCookie, jwt, "/newAPI");
     }
 
     public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-        return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken");
+        return generateCookie(jwtRefreshCookie, refreshToken, "/newAPI/auth/refreshtoken");
     }
 
     public String getJwtFromCookies(HttpServletRequest request) {
@@ -50,12 +50,12 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/newAPI").build();
         return cookie;
     }
 
     public ResponseCookie getCleanJwtRefreshCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api/auth/refreshtoken").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/newAPI/auth/refreshtoken").build();
         return cookie;
     }
 
