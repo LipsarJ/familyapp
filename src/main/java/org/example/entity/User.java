@@ -57,9 +57,8 @@ public class User {
     @JsonIgnore
     private Set<Family> families = new HashSet<>();
 
-    @ManyToMany(mappedBy = "users")
-    @JsonIgnore
-    private Set<Product> products = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<UserProduct> userProducts = new HashSet<>();
 
     @PrePersist
     void onCreate() {

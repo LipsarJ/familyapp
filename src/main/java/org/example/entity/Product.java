@@ -29,25 +29,19 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductStatus status;
-
     @Column(nullable = false)
     private LocalDateTime createDate;
 
     @Column(nullable = false)
     private LocalDateTime updateDate;
 
-    @ManyToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
-    private Set<Family> families = new HashSet<>();
+    private Set<FamilyProduct> familyProducts = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "users_products",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private Set<UserProduct> userProducts = new HashSet<>();
 
     @PrePersist
     void onCreate() {
@@ -79,7 +73,6 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", status='" + status + '\'' +
                 ", createDate=" + createDate +
                 ", updateDate=" + updateDate +
                 '}';

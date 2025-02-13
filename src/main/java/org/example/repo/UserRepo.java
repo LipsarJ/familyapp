@@ -22,7 +22,4 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query("select t from Task t join t.creator c where c = :user")
     List<Task> findTasksByUser(User user);
-
-    @Query("select p from Product p join p.users u where u = :user")
-    List<Product> findProductsByUser(User user);
 }

@@ -46,11 +46,8 @@ public class Family {
             inverseJoinColumns = @JoinColumn(name = "task_id"))
     private Set<Task> tasks = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable( name = "products_family",
-            joinColumns = @JoinColumn(name = "family_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>();
+    @OneToMany(mappedBy = "family")
+    private Set<FamilyProduct> familyProducts = new HashSet<>();
 
     @PrePersist
     void onCreate() {
