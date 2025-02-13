@@ -1,6 +1,7 @@
 package org.example.repo;
 
 import org.example.entity.Family;
+import org.example.entity.Product;
 import org.example.entity.Task;
 import org.example.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

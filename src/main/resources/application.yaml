@@ -3,7 +3,7 @@ spring:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:familyapp}
     driver-class-name: org.postgresql.Driver
     username: ${DATABASE_USER:postgres}
-    password: ${DATABASE_PASSWORD:password}
+    password: ${DATABASE_PASSWORD:Notna20002}
   jpa:
     hibernate:
       ddl-auto: validate

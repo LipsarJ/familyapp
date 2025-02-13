@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class ResponseTaskDTO {
     private Long id;
-    private String name;
+    private String title;
     private String description;
     private String status;
     private ResponseUserDto creator;
