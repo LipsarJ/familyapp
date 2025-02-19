@@ -80,4 +80,9 @@ public class TaskService {
         familyRepo.save(family);
         return taskMapper.toResponseTaskDTO(task);
     }
+
+    public void deleteTask(Long taskId) {
+        Task task = taskRepo.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        taskRepo.delete(task);
+    }
 }

@@ -26,7 +26,7 @@ public class TaskController {
     }
 
     @GetMapping("solo")
-    public ResponseEntity<List<ResponseTaskDTO>> getAllTasksForUser(){
+    public ResponseEntity<List<ResponseTaskDTO>> getAllTasksForUser() {
         return ResponseEntity.ok(taskService.getAllTasksForUser());
     }
 
@@ -38,5 +38,11 @@ public class TaskController {
     @PostMapping("create")
     public ResponseEntity<ResponseTaskDTO> createTaskForYourself(@RequestBody RequestTaskDTO requestTaskDTO) {
         return ResponseEntity.ok(taskService.createTaskForYourself(requestTaskDTO));
+    }
+
+    @DeleteMapping("{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 }
