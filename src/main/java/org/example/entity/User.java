@@ -60,6 +60,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserProduct> userProducts = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Invitation> invitations = new HashSet<>();
+
     @PrePersist
     void onCreate() {
         updateDate = LocalDateTime.now(ZoneId.from(UTC));

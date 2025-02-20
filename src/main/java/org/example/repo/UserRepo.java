@@ -18,4 +18,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("select f from Family f join f.users u where u = :user")
     List<Family> findAllFamiliesByUser(User user);
 
+    List<User> findAllByUsernameIn(List<String> username);
+
 }

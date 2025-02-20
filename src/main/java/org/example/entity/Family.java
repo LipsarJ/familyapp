@@ -49,6 +49,9 @@ public class Family {
     @OneToMany(mappedBy = "family")
     private Set<FamilyProduct> familyProducts = new HashSet<>();
 
+    @OneToMany(mappedBy = "family")
+    private Set<Invitation> invitations = new HashSet<>();
+
     @PrePersist
     void onCreate() {
         updateDate = LocalDateTime.now(ZoneId.from(UTC));

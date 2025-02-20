@@ -32,11 +32,6 @@ public class FamilyController {
         return ResponseEntity.ok(familyService.createFamily(familyDTO));
     }
 
-    @PutMapping("add")
-    public ResponseEntity<ResponseFamilyDTO> addUserToFamily(@Valid @RequestBody RequestFamilyDTO familyDTO) {
-        return ResponseEntity.ok(familyService.addUsersToFamily(familyDTO));
-    }
-
     @DeleteMapping
     public ResponseEntity<Void> deleteUsers(@Valid @RequestBody RequestFamilyDTO familyDTO) {
         familyService.deleteUsersFromFamily(familyDTO);
