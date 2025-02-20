@@ -1,7 +1,9 @@
 package org.example.repo.specification;
 
 import jakarta.persistence.criteria.Predicate;
+import org.example.entity.Product;
 import org.example.entity.ProductRelation;
+import org.example.entity.User;
 import org.example.repo.filter.FilterParam;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -13,7 +15,15 @@ public class ProductRelationSpecification {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(root.get("owner"), owner));
+            if (owner != null) {
+                if(owner instanceof User) {
+                    predicates.add(cb.equal(root.get("user"), owner));
+                }
+                else {
+                    predicates.add(cb.equal(root.get("family"), owner));
+                }
+            }
+
 
             if (filterParam.getStatus() != null) {
                 predicates.add(cb.equal(root.get("status"), filterParam.getStatus()));

@@ -31,7 +31,7 @@ public class ProductService {
 
     @Transactional
     public ResponseProductDTO addNewProduct(RequestProductDTO requestProductDTO) {
-        if (productRepo.existsByName(requestProductDTO.getName())) {
+        if (productRepo.existsByName(requestProductDTO.getName().toLowerCase())) {
             throw new ProductAlreadyExists("Product cant be added twice", Errors.PRODUCT_ALREADY_EXISTS);
         }
         Product product = new Product();

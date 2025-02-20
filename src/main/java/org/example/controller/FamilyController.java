@@ -27,7 +27,7 @@ public class FamilyController {
         return ResponseEntity.ok(familyService.getFamilyByID(id));
     }
 
-    @PostMapping("create")
+    @PostMapping
     public ResponseEntity<ResponseFamilyDTO> createFamily(@RequestBody RequestFamilyDTO familyDTO) {
         return ResponseEntity.ok(familyService.createFamily(familyDTO));
     }

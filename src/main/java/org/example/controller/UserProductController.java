@@ -42,8 +42,8 @@ public class UserProductController {
         return ResponseEntity.ok(userProductService.updateProductStatusForUser(status, productId));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteProductForUser(@RequestParam Long productID) {
+    @DeleteMapping("{productID}")
+    public ResponseEntity<Void> deleteProductForUser(@PathVariable Long productID) {
         userProductService.deleteProductFromUser(productID);
         return ResponseEntity.noContent().build();
     }
