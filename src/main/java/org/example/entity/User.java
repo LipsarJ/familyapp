@@ -61,6 +61,7 @@ public class User {
     private Set<UserProduct> userProducts = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Invitation> invitations = new HashSet<>();
 
     @PrePersist

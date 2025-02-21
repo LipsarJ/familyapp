@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,6 +51,7 @@ public class Family {
     private Set<FamilyProduct> familyProducts = new HashSet<>();
 
     @OneToMany(mappedBy = "family")
+    @JsonIgnore
     private Set<Invitation> invitations = new HashSet<>();
 
     @PrePersist

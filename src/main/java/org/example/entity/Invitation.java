@@ -42,4 +42,27 @@ public class Invitation {
     void onCreate() {
         createDate = LocalDateTime.now(ZoneId.from(UTC));
     }
+
+    @Override
+    public int hashCode() {
+        return 430;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Invitation other = (Invitation) obj;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Invitation{" +
+                "id=" + id +
+                ", status='" + status + '\'' +
+                ", createDate=" + createDate +
+                '}';
+    }
 }
