@@ -42,14 +42,15 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime updateDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User creator;
 
-    @ManyToMany(mappedBy = "tasks")
+    @ManyToOne
+    @JoinColumn(name = "family_id")
     @JsonIgnore
-    private Set<Family> families = new HashSet<>();
+    private Family family;
 
     @PrePersist
     void onCreate() {

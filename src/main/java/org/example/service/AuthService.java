@@ -49,6 +49,9 @@ public class AuthService {
         user.setUsername(signUpDTO.username());
         user.setEmail(signUpDTO.email());
         user.setPassword(encoder.encode(signUpDTO.password()));
+        user.setFirstname(signUpDTO.firstname());
+        user.setMiddlename(signUpDTO.middlename());
+        user.setLastname(signUpDTO.lastname());
 
         userRepo.save(user);
     }

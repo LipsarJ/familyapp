@@ -1,7 +1,6 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.request.RequestFamilyDTO;
 import org.example.dto.request.RequestUserDTO;
 import org.example.dto.response.ResponseInvitationDTO;
 import org.example.entity.Family;
@@ -22,9 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class InvitationService {
@@ -43,18 +39,13 @@ public class InvitationService {
                 .map(invitationMapper::toResponseInvitationDTO);
     }
 
-    public void inviteUsersToFamily(RequestFamilyDTO requestFamilyDTO) {
-        Family family = familyRepo.findByNameIgnoreCase(requestFamilyDTO.getName()).orElseThrow(() -> new FamilyNotFoundException("Family not found"));
-        List<User> users = userRepo.findAllByUsernameIn(requestFamilyDTO.getUsers()
-                .stream()
-                .map(RequestUserDTO::getUsername).collect(Collectors.toList()));
-
-        for (User user : users) {
-            InvitationEvent event = new InvitationEvent(
-                    user.getId(), family.getId(), family.getName(), user.getEmail()
-            );
-            familyInvitationProducer.sendInvitationEvent(event);
-        }
+    public void inviteUsersToFamily(Long familyId, RequestUserDTO requestUserDTO) {
+        Family family = familyRepo.findById(familyId).orElseThrow(() -> new FamilyNotFoundException("Family not found"));
+        User user = userRepo.findUserByUsername(requestUserDTO.getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        InvitationEvent event = new InvitationEvent(
+                user.getId(), family.getId(), family.getName(), user.getEmail()
+        );
+        familyInvitationProducer.sendInvitationEvent(event);
 
     }
 

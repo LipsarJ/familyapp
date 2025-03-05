@@ -2,7 +2,7 @@ package org.example.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.request.RequestFamilyDTO;
+import org.example.dto.request.RequestUserDTO;
 import org.example.dto.response.PageDTO;
 import org.example.dto.response.ResponseInvitationDTO;
 import org.example.entity.User;
@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("newAPI/family/invite")
@@ -43,10 +45,9 @@ public class InvitationController {
         return ResponseEntity.ok("Вы отклонили приглашение");
     }
 
-
     @PutMapping("{familyId}")
-    public ResponseEntity<String> inviteUsersToFamily(@Valid @RequestBody RequestFamilyDTO familyDTO) {
-        invitationService.inviteUsersToFamily(familyDTO);
-        return ResponseEntity.ok("Приглашения отправлены!");
+    public ResponseEntity<String> inviteUsersToFamily(@Valid @RequestBody RequestUserDTO requestUser, @PathVariable Long familyId) {
+        invitationService.inviteUsersToFamily(familyId, requestUser);
+        return ResponseEntity.ok("Приглашение отправлено!");
     }
 }

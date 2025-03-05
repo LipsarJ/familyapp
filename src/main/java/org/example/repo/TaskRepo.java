@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface TaskRepo extends JpaRepository<Task, Long> {
     Page<Task> findAllByCreator(User user, Pageable pageable);
 
-    @Query("SELECT t FROM Task t JOIN t.families f WHERE f = :family")
+    @Query("SELECT t FROM Task t JOIN t.family f WHERE f = :family")
     Page<Task> findAllByFamily(Family family, Pageable pageable);
 
 }

@@ -50,7 +50,7 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updateDate;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private Set<Task> tasks = new HashSet<>();
 
     @ManyToMany(mappedBy = "users")

@@ -11,6 +11,7 @@ import org.example.entity.Product;
 import org.example.entity.ProductStatus;
 import org.example.exception.extend.FamilyNotFoundException;
 import org.example.exception.extend.IllegalStatusException;
+import org.example.exception.extend.ProductAlreadyExists;
 import org.example.exception.extend.ProductNotFoundException;
 import org.example.mapper.FamilyProductMapper;
 import org.example.repo.FamilyProductRepo;
@@ -44,6 +45,9 @@ public class FamilyProductService {
     public ResponseSharedProductDTO addProductToFamily(Long familyID, Long productID) {
         Family family = familyRepo.findById(familyID).orElseThrow(() -> new FamilyNotFoundException("Family is not found"));
         Product product = productRepo.findById(productID).orElseThrow(() -> new ProductNotFoundException("Product is not found"));
+        if(familyProductRepo.existsByFamilyAndProduct(family, product)) {
+            throw new ProductAlreadyExists("Product cant be added twice", Errors.PRODUCT_ALREADY_EXISTS);
+        }
         FamilyProduct familyProduct = new FamilyProduct();
         familyProduct.setFamily(family);
         familyProduct.setProduct(product);

@@ -10,6 +10,7 @@ import org.example.entity.ProductStatus;
 import org.example.entity.User;
 import org.example.entity.UserProduct;
 import org.example.exception.extend.IllegalStatusException;
+import org.example.exception.extend.ProductAlreadyExists;
 import org.example.exception.extend.ProductNotFoundException;
 import org.example.exception.extend.UserNotFoundException;
 import org.example.mapper.UserProductMapper;
@@ -45,6 +46,9 @@ public class UserProductService {
     public ResponseSharedProductDTO addProductToYourself(Long productID) {
         User user = userRepo.findUserByUsername(userContext.getUserDto().getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
         Product product = productRepo.findById(productID).orElseThrow(() -> new ProductNotFoundException("Product is not found"));
+        if(userProductRepo.existsByUserAndProduct(user, product)) {
+            throw new ProductAlreadyExists("Product cant be added twice", Errors.PRODUCT_ALREADY_EXISTS);
+        }
         UserProduct userProduct = new UserProduct();
         userProduct.setUser(user);
         userProduct.setProduct(product);
