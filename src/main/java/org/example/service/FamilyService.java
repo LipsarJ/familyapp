@@ -78,38 +78,16 @@ public class FamilyService {
 
 
     @Transactional
-    public void deleteUsersFromFamily(RequestFamilyDTO requestFamilyDTO) {
-        Family family = getFamilyForService(requestFamilyDTO);
-        List<RequestUserDTO> requestUsers = requestFamilyDTO.getUsers();
-        List<User> users = getUsersForService(requestUsers);
-
-        users.forEach(user -> {
-            family.getUsers().remove(user);
-            user.getFamilies().remove(family);
-            userRepo.save(user);
-        });
+    public void deleteUserFromFamily(Long userID, Long familyID) {
+        Family family = familyRepo.findById(familyID).orElseThrow(()-> new FamilyNotFoundException("Family is not found"));
+        User user = userRepo.findById(userID).orElseThrow(() -> new UserNotFoundException("User not found"));
+        family.getUsers().remove(user);
 
         if (family.getUsers().isEmpty()) {
             familyRepo.delete(family);
         } else {
             familyRepo.save(family);
         }
-    }
-
-    private Family getFamilyForService(RequestFamilyDTO requestFamilyDTO) {
-        String name = requestFamilyDTO.getName();
-        return familyRepo.findByNameIgnoreCase(name).orElseThrow(() -> new FamilyNotFoundException("Family with name" + name + " isn't found"));
-    }
-
-    private List<User> getUsersForService(List<RequestUserDTO> requestUsers) {
-        List<User> users = new ArrayList<>();
-        requestUsers.forEach(
-                requestUserDTO -> {
-                    users.add(userRepo.findUserByUsername(requestUserDTO.getUsername()).orElseThrow(() ->
-                            new UserNotFoundException("User with username " + requestUserDTO.getUsername() + " is not found")));
-                }
-        );
-        return users;
     }
 
 }

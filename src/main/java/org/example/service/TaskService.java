@@ -77,8 +77,8 @@ public class TaskService {
     public ResponseTaskDTO createTaskForFamily(RequestTaskDTO requestTaskDTO, Long familyID) {
         Task task = createTask(requestTaskDTO);
         Family family = familyRepo.findById(familyID).orElseThrow(() -> new FamilyNotFoundException("Family with id" + familyID + " not found"));
-        family.getTasks().add(task);
-        familyRepo.save(family);
+        task.setFamily(family);
+        taskRepo.save(task);
         return taskMapper.toResponseTaskDTO(task);
     }
 

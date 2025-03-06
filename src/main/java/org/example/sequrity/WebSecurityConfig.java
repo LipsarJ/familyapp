@@ -59,6 +59,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/newAPI/auth/register").permitAll()
                                 .requestMatchers("/newAPI/auth/refreshtoken").permitAll()
+                                .requestMatchers("/ws").permitAll()
                                 .requestMatchers("/newAPI/auth/signin").permitAll()
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()

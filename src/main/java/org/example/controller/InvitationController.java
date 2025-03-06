@@ -5,15 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.request.RequestUserDTO;
 import org.example.dto.response.PageDTO;
 import org.example.dto.response.ResponseInvitationDTO;
-import org.example.entity.User;
 import org.example.service.InvitationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("newAPI/family/invite")
@@ -23,8 +19,8 @@ public class InvitationController {
 
 
     @GetMapping
-    public PageDTO<ResponseInvitationDTO> getUserInvitations(@AuthenticationPrincipal User user, Pageable pageable) {
-        Page<ResponseInvitationDTO> invitations = invitationService.getPendingInvitations(user, pageable);
+    public PageDTO<ResponseInvitationDTO> getUserInvitations(Pageable pageable) {
+        Page<ResponseInvitationDTO> invitations = invitationService.getPendingInvitations(pageable);
         return new PageDTO<>(
                 invitations.getContent(),
                 invitations.getTotalElements(),

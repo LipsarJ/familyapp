@@ -32,9 +32,9 @@ public class FamilyController {
         return ResponseEntity.ok(familyService.createFamily(familyDTO));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteUsers(@Valid @RequestBody RequestFamilyDTO familyDTO) {
-        familyService.deleteUsersFromFamily(familyDTO);
+    @DeleteMapping("{familyID}/{userID}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable Long familyID, @PathVariable Long userID) {
+        familyService.deleteUserFromFamily(userID, familyID);
         return ResponseEntity.ok().build();
     }
 

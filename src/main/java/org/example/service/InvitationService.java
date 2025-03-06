@@ -34,7 +34,8 @@ public class InvitationService {
     /**
      * Получение списка активных приглашений для пользователя
      */
-    public Page<ResponseInvitationDTO> getPendingInvitations(User user, Pageable pageable) {
+    public Page<ResponseInvitationDTO> getPendingInvitations(Pageable pageable) {
+        User user = userRepo.findUserByUsername(userContext.getUserDto().getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
         return invitationRepo.findByUserAndStatus(user, InvitationStatus.PENDING, pageable)
                 .map(invitationMapper::toResponseInvitationDTO);
     }
