@@ -1,9 +1,25 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: anton.vtanke@gmail.com
+    password: djmxhfvjgdjaurzn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:familyapp}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5433}/${DATABASE_NAME:family}
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USER:postgres}
-    password: ${DATABASE_PASSWORD:Notna20002}
+    username: ${DATABASE_USER:family}
+    password: ${DATABASE_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: validate

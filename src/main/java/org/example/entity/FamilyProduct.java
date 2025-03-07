@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FamilyProduct {
+public class FamilyProduct implements ProductRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +29,15 @@ public class FamilyProduct {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
+    @Override
+    public Product getProduct() {
+        return product;
+    }
+
+    @Override
+    public Family getOwner() {
+        return family;
+    }
 }
 

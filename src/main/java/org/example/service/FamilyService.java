@@ -8,15 +8,19 @@ import org.example.dto.request.RequestUserDTO;
 import org.example.dto.response.ResponseFamilyDTO;
 import org.example.dto.response.ResponseUserDto;
 import org.example.entity.Family;
+import org.example.entity.Invitation;
+import org.example.entity.InvitationStatus;
 import org.example.entity.User;
 import org.example.exception.extend.FamilyNameException;
 import org.example.exception.extend.FamilyNotFoundException;
 import org.example.exception.extend.UserNotFoundException;
 import org.example.mapper.FamilyMapper;
-import org.example.mapper.UserMapper;
+import org.example.messaging.InvitationEvent;
 import org.example.repo.FamilyRepo;
+import org.example.repo.InvitationRepo;
 import org.example.repo.UserRepo;
 import org.example.sequrity.service.UserContext;
+import org.example.messaging.FamilyInvitationProducer;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ public class FamilyService {
     private final UserContext userContext;
     private final FamilyMapper familyMapper;
     private final FamilyRepo familyRepo;
+    private final InvitationRepo invitationRepo;
+    private final FamilyInvitationProducer invitationProducer;
 
 
     public List<ResponseFamilyDTO> getFamiliesForUser() {
@@ -70,52 +76,18 @@ public class FamilyService {
 
     }
 
-    @Transactional
-    public ResponseFamilyDTO addUsersToFamily(RequestFamilyDTO requestFamilyDTO) {
-        Family family = getFamilyForService(requestFamilyDTO);
-        List<RequestUserDTO> requestUsers = requestFamilyDTO.getUsers();
-        List<User> users = getUsersForService(requestUsers);
-
-        users.forEach(user -> {
-            family.getUsers().add(user);
-        });
-        familyRepo.save(family);
-        return familyMapper.toResponseFamilyDTO(family);
-    }
 
     @Transactional
-    public void deleteUsersFromFamily(RequestFamilyDTO requestFamilyDTO) {
-        Family family = getFamilyForService(requestFamilyDTO);
-        List<RequestUserDTO> requestUsers = requestFamilyDTO.getUsers();
-        List<User> users = getUsersForService(requestUsers);
-
-        users.forEach(user -> {
-            family.getUsers().remove(user);
-            user.getFamilies().remove(family);
-            userRepo.save(user);
-        });
+    public void deleteUserFromFamily(Long userID, Long familyID) {
+        Family family = familyRepo.findById(familyID).orElseThrow(()-> new FamilyNotFoundException("Family is not found"));
+        User user = userRepo.findById(userID).orElseThrow(() -> new UserNotFoundException("User not found"));
+        family.getUsers().remove(user);
 
         if (family.getUsers().isEmpty()) {
             familyRepo.delete(family);
         } else {
             familyRepo.save(family);
         }
-    }
-
-    private Family getFamilyForService(RequestFamilyDTO requestFamilyDTO) {
-        String name = requestFamilyDTO.getName();
-        return familyRepo.findByNameIgnoreCase(name).orElseThrow(() -> new FamilyNotFoundException("Family with name" + name + " isn't found"));
-    }
-
-    private List<User> getUsersForService(List<RequestUserDTO> requestUsers) {
-        List<User> users = new ArrayList<>();
-        requestUsers.forEach(
-                requestUserDTO -> {
-                    users.add(userRepo.findUserByUsername(requestUserDTO.getUsername()).orElseThrow(() ->
-                            new UserNotFoundException("User with username " + requestUserDTO.getUsername() + " is not found")));
-                }
-        );
-        return users;
     }
 
 }

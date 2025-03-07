@@ -1,12 +1,18 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.response.ResponseSharedProductDTO;
+import org.example.dto.request.RequestProductDTO;
+import org.example.dto.response.PageDTO;
+import org.example.dto.response.ResponseProductDTO;
+import org.example.repo.filter.FilterParam;
 import org.example.service.ProductService;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("newAPI/product")
@@ -14,23 +20,34 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("{familyId}")
-    public ResponseEntity<List<ResponseSharedProductDTO>> getProductsForFamily(@PathVariable("familyId") Long familyId) {
-        return ResponseEntity.ok(productService.getAllProductsForFamily(familyId));
+    @GetMapping
+    public PageDTO<ResponseProductDTO> getAllProducts(@ParameterObject @Valid @Parameter FilterParam filterParam,
+                                                      Pageable pageable) {
+        Page<ResponseProductDTO> productInfoPage = productService.getAllProducts(filterParam, pageable);
+        return new PageDTO<>(
+                productInfoPage.getContent(),
+                productInfoPage.getTotalElements(),
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
     }
 
-    @GetMapping("solo")
-    public ResponseEntity<List<ResponseSharedProductDTO>> getAllProductsForUser() {
-        return ResponseEntity.ok(productService.getAllProductsForUser());
+    @PostMapping
+    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO) {
+        return ResponseEntity.ok(productService.addNewProduct(requestProductDTO));
     }
 
-    @PostMapping("add/{familyID}/{productID}")
-    public ResponseEntity<ResponseSharedProductDTO> addProductForFamily(@PathVariable("familyID") Long familyID, @PathVariable Long productID) {
-        return ResponseEntity.ok(productService.addProductToFamily(familyID, productID));
+
+    @PutMapping("{productId}")
+    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestProductDTO requestProductDTO, @PathVariable Long productId) {
+        return ResponseEntity.ok(productService.updateProduct(requestProductDTO, productId));
     }
 
-    @PostMapping("add/{productID}")
-    public ResponseEntity<ResponseSharedProductDTO> addProductForYourself(@PathVariable Long productID) {
-        return ResponseEntity.ok(productService.addProductToYourself(productID));
+    @DeleteMapping("{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
+
+
 }

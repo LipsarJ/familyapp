@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,14 +41,15 @@ public class Family {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable( name = "tasks_family",
-            joinColumns = @JoinColumn(name = "family_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private Set<Task> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "family")
     private Set<FamilyProduct> familyProducts = new HashSet<>();
+
+    @OneToMany(mappedBy = "family")
+    @JsonIgnore
+    private Set<Invitation> invitations = new HashSet<>();
 
     @PrePersist
     void onCreate() {

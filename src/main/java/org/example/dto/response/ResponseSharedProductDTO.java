@@ -10,6 +10,6 @@ import org.example.entity.ProductStatus;
 @NoArgsConstructor
 public class ResponseSharedProductDTO {
     private Long id;
-    private String name;
+    private ResponseProductDTO product;
     private ProductStatus status;
 }

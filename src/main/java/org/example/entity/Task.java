@@ -47,9 +47,10 @@ public class Task {
     @JsonIgnore
     private User creator;
 
-    @ManyToMany(mappedBy = "tasks")
+    @ManyToOne
+    @JoinColumn(name = "family_id")
     @JsonIgnore
-    private Set<Family> families = new HashSet<>();
+    private Family family;
 
     @PrePersist
     void onCreate() {

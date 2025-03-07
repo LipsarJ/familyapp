@@ -50,7 +50,7 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updateDate;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private Set<Task> tasks = new HashSet<>();
 
     @ManyToMany(mappedBy = "users")
@@ -59,6 +59,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserProduct> userProducts = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Invitation> invitations = new HashSet<>();
 
     @PrePersist
     void onCreate() {

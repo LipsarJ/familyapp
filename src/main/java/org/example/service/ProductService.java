@@ -2,77 +2,56 @@ package org.example.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.response.ResponseSharedProductDTO;
-import org.example.entity.*;
-import org.example.exception.extend.FamilyNotFoundException;
+import org.example.controlleradvice.Errors;
+import org.example.dto.request.RequestProductDTO;
+import org.example.dto.response.ResponseProductDTO;
+import org.example.entity.Product;
+import org.example.exception.extend.ProductAlreadyExists;
 import org.example.exception.extend.ProductNotFoundException;
-import org.example.exception.extend.UserNotFoundException;
-import org.example.mapper.FamilyProductMapper;
 import org.example.mapper.ProductMapper;
-import org.example.mapper.UserProductMapper;
-import org.example.repo.*;
-import org.example.sequrity.service.UserContext;
+import org.example.repo.ProductRepo;
+import org.example.repo.filter.FilterParam;
+import org.example.repo.specification.ProductSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final UserContext userContext;
     private final ProductRepo productRepo;
-    private final FamilyRepo familyRepo;
     private final ProductMapper productMapper;
-    private final UserRepo userRepo;
-    private final FamilyProductRepo familyProductRepo;
-    private final UserProductRepo userProductRepo;
-    private final FamilyProductMapper familyProductMapper;
-    private final UserProductMapper userProductMapper;
 
-    public List<ResponseSharedProductDTO> getAllProductsForFamily(Long familyID) {
-        Family family = familyRepo.findById(familyID).orElseThrow(() -> new FamilyNotFoundException("Family is not found"));
-        List<ResponseSharedProductDTO> responseSharedProductDTOList = new ArrayList<>();
-        family.getFamilyProducts().forEach(product -> {
-            responseSharedProductDTOList.add(new ResponseSharedProductDTO(product.getProduct().getId(), product.getProduct().getName(), product.getStatus()));
-        });
-
-        return responseSharedProductDTOList;
-    }
-
-    public List<ResponseSharedProductDTO> getAllProductsForUser() {
-        User user = userRepo.findUserByUsername(userContext.getUserDto().getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        List<ResponseSharedProductDTO> responseSharedProductDTOList = new ArrayList<>();
-        user.getUserProducts().forEach(product -> {
-            responseSharedProductDTOList.add(new ResponseSharedProductDTO(product.getProduct().getId(), product.getProduct().getName(), product.getStatus()));
-        });
-        return responseSharedProductDTOList;
-    }
-
-
-    @Transactional
-    public ResponseSharedProductDTO addProductToFamily(Long familyID, Long productID) {
-        Family family = familyRepo.findById(familyID).orElseThrow(() -> new FamilyNotFoundException("Family is not found"));
-        Product product = productRepo.findById(productID).orElseThrow(() -> new ProductNotFoundException("Product is not found"));
-        FamilyProduct familyProduct = new FamilyProduct();
-        familyProduct.setFamily(family);
-        familyProduct.setProduct(product);
-        familyProduct.setStatus(ProductStatus.MIDDLE);
-        familyProductRepo.save(familyProduct);
-        return familyProductMapper.toResponseSharedProductDTO(familyProduct);
+    public Page<ResponseProductDTO> getAllProducts(FilterParam filterParam, Pageable pageable) {
+        Specification<Product> spec = ProductSpecification.searchByFilterText(filterParam.getFilterText());
+        return productRepo.findAll(spec, pageable).map(productMapper::toResponseProductDTO);
     }
 
     @Transactional
-    public ResponseSharedProductDTO addProductToYourself(Long productID) {
-        User user = userRepo.findUserByUsername(userContext.getUserDto().getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        Product product = productRepo.findById(productID).orElseThrow(() -> new ProductNotFoundException("Product is not found"));
-        UserProduct userProduct = new UserProduct();
-        userProduct.setUser(user);
-        userProduct.setProduct(product);
-        userProduct.setStatus(ProductStatus.MIDDLE);
-        userProductRepo.save(userProduct);
-        return userProductMapper.toResponseSharedProductDTO(userProduct);
+    public ResponseProductDTO addNewProduct(RequestProductDTO requestProductDTO) {
+        if (productRepo.existsByName(requestProductDTO.getName().toLowerCase())) {
+            throw new ProductAlreadyExists("Product cant be added twice", Errors.PRODUCT_ALREADY_EXISTS);
+        }
+        Product product = new Product();
+        product.setName(requestProductDTO.getName().toLowerCase());
+        productRepo.save(product);
+        return productMapper.toResponseProductDTO(product);
     }
+
+    public ResponseProductDTO updateProduct(RequestProductDTO requestProductDTO, Long productId) {
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        product.setName(requestProductDTO.getName().toLowerCase());
+        productRepo.save(product);
+        return productMapper.toResponseProductDTO(product);
+    }
+
+    public void deleteProduct(Long productId) {
+        productRepo.deleteById(productId);
+    }
+
 
 }
+
+

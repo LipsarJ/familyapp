@@ -6,11 +6,11 @@ plugins {
 }
 
 def dbDriver = 'org.postgresql.Driver'
-def dbUser = System.getenv('DATABASE_USER') ?: 'postgres'
+def dbUser = System.getenv('DATABASE_USER') ?: 'family'
 def dbPassword = System.getenv('DATABASE_PASSWORD') ?: 'password'
 def dbHost = System.getenv('DATABASE_HOST') ?: 'localhost'
-def dbPort = System.getenv('DATABASE_PORT') ?: 5432
-def dbName = System.getenv('DATABASE_NAME') ?: 'familyapp'
+def dbPort = System.getenv('DATABASE_PORT') ?: 5433
+def dbName = System.getenv('DATABASE_NAME') ?: 'family'
 def dbUrl = System.getenv('DATABASE_URL') ?: "jdbc:postgresql://$dbHost:$dbPort/$dbName"
 
 flyway {
@@ -64,6 +64,15 @@ dependencies {
 
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 tasks.named('test') {
